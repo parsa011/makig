@@ -117,6 +117,12 @@ ask_again:
         else
             goto ask_again;
     }
+    char *mode = rewrite ? "w+" : "a+";
+    FILE *fp = fopen(".gitignore", mode);
+    char *p = data->ptr;
+    while (*p) {
+        fputc(*p++, fp);
+    }
 }
 
 int main(int argc, char *argv[])

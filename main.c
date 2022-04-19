@@ -14,7 +14,26 @@
 
 const char *options[] = {
     "C",
-    "C++"
+    "C++",
+    "CMake",
+    "Python",
+    "Perl",
+    "Go",
+    "Julia",
+    "Maven",
+    "Nim",
+    "Raku",
+    "Raket",
+    "Swift",
+    "D",
+    "Erlang",
+    "Java",
+    "Kotlin",
+    "Lua",
+    "R",
+    "Rust",
+    "QT",
+
 };
 
 struct string {

@@ -48,7 +48,7 @@ struct string make_url(const char *type)
     return s;
 }
 
-void make_curl_request(char *url, struct string s)
+void make_curl_request(char *url, struct string *s)
 {
     CURL *curl;
     CURLcode res;
@@ -57,7 +57,7 @@ void make_curl_request(char *url, struct string s)
     if(curl) {
         curl_easy_setopt(curl, CURLOPT_URL, url);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writefunc);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &s);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, s);
         res = curl_easy_perform(curl);
         /* always cleanup */
         curl_easy_cleanup(curl);
@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
     init_string(&url);
     url = make_url(opt);
     printf("%s\n", url.ptr);
-    make_curl_request(url.ptr, data);
+    make_curl_request(url.ptr, &data);
     printf("%s\n", data.ptr);
     return 0;
 }

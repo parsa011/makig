@@ -3,6 +3,7 @@
 
 # Object files
 *.o
+*.out
 makig
 *.ko
 *.obj

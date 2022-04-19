@@ -1,8 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include <ctype.h>
+#include <unistd.h>
 #include <curl/curl.h>
+
+#ifdef WIN32
+#include <io.h>
+#define F_OK 0
+#define access _access
+#endif
 
 const char *options[] = {
     "C",
@@ -59,6 +67,7 @@ void make_curl_request(char *url, struct string *s)
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writefunc);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, s);
         res = curl_easy_perform(curl);
+        printf(".gitignore File \033[34mSuccessfully\033[0m Recived\n");
         /* always cleanup */
         curl_easy_cleanup(curl);
     }
@@ -89,6 +98,27 @@ again :
     return options[ch];
 }
 
+bool file_exist(char *path)
+{
+	return access(path, F_OK) == 0;
+}
+
+void write_out_data(struct string *data)
+{
+    bool rewrite = true;
+    if (file_exist(".gitignore")) {
+        printf("ignore File Exist, Rewrite it ? (y/n)\n");
+ask_again:
+        char ch = getchar();
+        if (ch == 'y')
+            rewrite = true;
+        else if (ch == 'n')
+            rewrite = false;
+        else
+            goto ask_again;
+    }
+}
+
 int main(int argc, char *argv[])
 {
     write_options();
@@ -97,8 +127,7 @@ int main(int argc, char *argv[])
     init_string(&data);
     init_string(&url);
     url = make_url(opt);
-    printf("%s\n", url.ptr);
     make_curl_request(url.ptr, &data);
-    printf("%s\n", data.ptr);
+    write_out_data(&data);
     return 0;
 }
